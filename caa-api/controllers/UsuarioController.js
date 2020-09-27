@@ -42,13 +42,13 @@ class UsuarioController {
     // PUT /
     update(req, res, next) {
         const { nome, email, password } = req.body;
-        Usuario.findById(req.payload.id).then(usuario => {
+        Usuario.findById(req.payload.id).then((usuario) => {
             if (!usuario) return res.status(401).json({ errors: "Usuário não registrado."});
             if (typeof nome !== "undefined") usuario.nome = nome;
             if (typeof email !== "undefined") usuario.email = email;
             if (typeof password !== "undefined") usuario.setSenha(password);
             return usuario.save().then(() => {
-                res.json({ usuario: usuario.enviarAuthJSON() });
+                return res.json({ usuario: usuario.enviarAuthJSON() });
             }).catch(next);
         }).catch(next);
     }
@@ -66,7 +66,7 @@ class UsuarioController {
     // POST /login
     login(req, res, next) {
         const { email, password } = req.body;
-        Usuario.findOne({ email }).then(() => {
+        Usuario.findOne({ email }).then((usuario) => {
             if (!usuario) return res.status(401).json({ errors: "Usuário não registrado."});
             if (!usuario.validarSenha(password)) return res.send(401).json({ errors: "Senha inválida"});
             return res.json({ usuario: usuario.enviarAuthJSON() });
@@ -81,7 +81,7 @@ class UsuarioController {
     }
 
     // POST /recuperar-senha
-    showRecovery(req, res, next) {
+    createRecovery(req, res, next) {
         const { email } = req.body;
         if (!email) return res.render('recovery', { error: "Preencha com o seu email", success: null });
         Usuario.findOne({ email }).then(() => {

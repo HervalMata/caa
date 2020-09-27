@@ -18,7 +18,7 @@ const UsuarioValidation = {
     },
     update: {
         body: {
-            nome: Joi.string().optional,
+            nome: Joi.string().optional(),
             email: Joi.string().email().optional(),
             password: Joi.string().optional()
         }
